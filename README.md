@@ -1,5 +1,5 @@
 # Sprint-2
-## How to use:
+## How to use (make sure you don't have an existing database named myDB!!!):
 ###
     1) You can navigate through pages by selecting desired page (Project, Student);
     2) You can add project/student by entering desired name and clicking 'add' button;
