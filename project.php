@@ -10,6 +10,8 @@
     if ($_GET['action'] == 'delete') {
         $sql = "delete from project where id = '".$_GET['id'] . "'";
         $conn->query($sql);
+        header("location:./?path=project");
+        exit;
     }
     if ($_GET['action'] == 'update') {
         if(isset($_POST['name1'])) {
@@ -37,7 +39,9 @@
                     $conn->query($sql);
                 }
             }
-        }    
+            header("location:./?path=project");
+            exit; 
+        }
     }
 ?>
 <table>
