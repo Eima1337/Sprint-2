@@ -1,6 +1,5 @@
 <?php
 require_once("createDB.php");
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
