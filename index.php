@@ -1,5 +1,5 @@
 <?php
-require_once("createDB.php");
+include_once("createDB.php");
 ?>
 <!DOCTYPE html>
 <html lang="en">
