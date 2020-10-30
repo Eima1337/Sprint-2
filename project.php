@@ -15,6 +15,28 @@
         if(isset($_POST['name1'])) {
             $sql = "update project set project_name ='".$_POST['name1']."' where id =" .$_GET['id'];
             $conn->query($sql);
+            $values = $_POST['myArr'];
+            $flagToRemoveAllStudents = false;
+            foreach ($values as $value) {
+                if($value == "Remove all students") {
+                    $flagToRemoveAllStudents = true;
+                    break;
+                } 
+                $sql = "select * from project_student where project_id=" . $_GET['id'] . " and student_id=" . $value;
+                $result = $conn->query($sql);
+                if (mysqli_num_rows($result) === 0) {
+                    $sql = "insert into project_student (project_id, student_id) values (".$_GET['id'] . ", " . $value.")";
+                    $conn->query($sql);
+                }
+            }
+            $sql = "select * from project_student where project_id=" . $_GET['id'];
+            $result = $conn->query($sql);
+            while($row = mysqli_fetch_assoc($result)) {
+                if(!in_array($row['student_id'],$values) || $flagToRemoveAllStudents) {
+                    $sql = "delete from project_student where student_id = ".$row['student_id'] . " and project_id = " . $_GET['id'];
+                    $conn->query($sql);
+                }
+            }
         }    
     }
 ?>

@@ -11,6 +11,34 @@
         $sql = "delete from student where id = '".$_GET['id'] . "'";
         $conn->query($sql);
     }
+    if ($_GET['action'] == 'update') {
+        if(isset($_POST['name1'])) {
+            $sql = "update student set student_name ='".$_POST['name1']."' where id =" .$_GET['id'];
+            $conn->query($sql);
+            $values = $_POST['myArr'];
+            $flagToRemoveAllProjects = false;
+            foreach ($values as $value) {
+                if($value == "Remove all projects") {
+                    $flagToRemoveAllProjects = true;
+                    break;
+                } 
+                $sql = "select * from project_student where student_id=" . $_GET['id'] . " and project_id=" . $value;
+                $result = $conn->query($sql);
+                if (mysqli_num_rows($result) === 0) {
+                    $sql = "insert into project_student (student_id, project_id) values (".$_GET['id'] . ", " . $value.")";
+                    $conn->query($sql);
+                }
+            }
+            $sql = "select * from project_student where student_id=" . $_GET['id'];
+            $result = $conn->query($sql);
+            while($row = mysqli_fetch_assoc($result)) {
+                if(!in_array($row['project_id'],$values) || $flagToRemoveAllProjects) {
+                    $sql = "delete from project_student where project_id = ".$row['project_id'] . " and student_id = " . $_GET['id'];
+                    $conn->query($sql);
+                }
+            }
+        }    
+    }
 ?>
 <table>
     <thead>
@@ -39,13 +67,18 @@
             <td><?php echo $row["id"]?></td>
             <td><?php echo $row["student_name"]?></td>
             <td><?php echo $students ?></td>
-            <td><button><a href='./?path=student&action=delete&id=<?php echo($row["id"])?>'>Delete</a></button><button>Update</button></td>
+            <td><button><a href='./?path=student&action=delete&id=<?php echo($row["id"])?>'>Delete</a></button><button><a href="./?path=student&action=update&id=<?php echo($row["id"])?>">Update</a></button></td>
         </tr>
             <?php }
     }
 ?>
 </table>
 <form action="" method="POST">
-    <input type="text" id="name" name="name" placeholder="add project">
+    <input type="text" id="name" name="name" placeholder="add student">
     <input type="submit" value="add">
 </form>
+<?php 
+    if ($_GET['action'] == 'update' && !isset($_POST['name1'])) {
+        include("update_student.php");
+    }
+?>
