@@ -1,5 +1,5 @@
 <?php 
-    if(isset($_POST['name'])) {
+    if(isset($_POST['name']) != "") {
         $sql = "select * from student where student_name = '".$_POST['name'] . "'";
         $result = $conn->query($sql);
         if(mysqli_num_rows($result) === 0) {
